@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.StudyBoardDao"><!-- dao 폴더 경로 값으로 설정 -->
+
+<!-- 신고 중복 확인 -->
+<select id="getSingoCount" resultType="int">
+select count(*) from reportreason_board where report_board_no=#{param1} and 
+category_no=#{param2} and report_nick = #{param3}
+</select>
+
+<!-- 신고글 신고카운트 +1 -->
+<update id="updateStudySingo" parameterType="int">
+update studyBoard set study_singo = study_singo + 1 where study_no = #{study_no}
+</update>
+
+
+<!-- 상세정보 구하기-->
+<select id="studySelect" parameterType="int" resultType="stdb">
+	select * from studyBoard where study_no=#{study_no}
+</select>
+
+<!-- 인서트 -->
+<insert id="studyInsert" parameterType="stdb">
+	insert into studyBoard values (studyBoard_seq.nextval, #{study_nick}, 3, 
+	#{study_subject}, #{study_content},
+	sysdate, 0, 0, 0, 0, #{study_start_date}, #{study_end_date}, 
+	to_date(#{study_end_date}, 'yyyy-mm-dd')-sysdate+1, 0)
+	<!-- D-day 계산 -->
+	<!-- 종료일-시작일 계산 
+		to_date(#{study_end_date}, 'yyyy-mm-dd')-to_date(#{study_start_date}, 'yyyy-mm-dd')+1
+	-->
+</insert>
+
+<!-- 조회수 -->
+<update id="studyUpdateRe" parameterType="int">
+	update studyBoard set study_readcount=study_readcount+1 where study_no=#{study_no}
+</update>
+
+<!-- 수정 -->
+<update id="studyUpdate" parameterType="stdb">
+   update studyBoard 
+   set study_subject=#{study_subject}, study_content=#{study_content},
+   study_start_date=#{study_start_date}, study_end_date=#{study_end_date} 
+   where study_no=#{study_no}
+</update>
+
+<!-- 삭제 -->
+<delete id="studyDelete" parameterType="int">
+	delete from studyBoard where study_no=#{study_no}
+</delete>
+
+<!-- 삭제 -->
+<delete id="singoStudyDelete">
+	delete from singo_board where category_no=#{param2} and singo_board_no=#{param1}
+</delete>
+
+<!-- 
+<update id="studyDelete" parameterType="int">
+	update studyBoard set study_del=1 where study_no=#{study_no}
+</update>
+ -->
+ 
+<!-- 전체 : 목록 구하기 -->
+<select id="studyList" parameterType="stdb" resultType="stdb">
+	select * from (select a.*, rownum rn from (
+	select * from studyBoard
+	<where>
+		<if test="keyword !=null and search != 'study_subcon'">
+		 ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword !=null and search == 'study_subcon'">
+		study_subject like '%' || #{keyword} || '%' or
+		study_content like '%' || #{keyword} || '%'
+		</if>
+	</where>
+		order by study_no desc)  a )
+		where rn between #{startRow} and #{endRow}
+</select>
+
+<!-- 전체 : 데이터 총 갯수 -->
+<select id="studyGetCount" parameterType="stdb" resultType="int">
+	select count(*) from studyBoard
+	<where> <!-- 검색어 포함한 데이터 개수 검색 -->
+		<if test="keyword != null and search != 'study_subcon'">
+			${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword != null and search == 'study_subcon'">
+			study_subject like '%'||#{keyword}||'%' or
+			study_content like '%'||#{keyword}||'%'
+		</if>
+	</where>
+</select>
+
+<!-- 모집완료 0->1 로 업데이트 -->
+<update id="studyMozip" parameterType="int">
+   update studyBoard set study_mozip=1 where study_no=#{study_no}
+</update>
+
+<!-- 모집완료 : 데이터 총 갯수 -->
+<select id="mozipNum" parameterType="int" resultType="int">
+	select count(*) from studyBoard 
+	<where> <!-- 검색어 포함한 데이터 개수 검색 -->
+	study_mozip=1 
+		<if test="keyword != null and search != 'study_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword != null and search == 'study_subcon'">
+			and study_subject like '%' || #{keyword} || '%' or
+				study_content like '%' || #{keyword} || '%'
+		</if>
+	</where>
+</select>
+
+<!-- 모집중 : 테이터 총 갯수 -->
+<select id="mozipingNum" parameterType="int" resultType="int">
+	select count(*) from studyBoard 
+	<where> <!-- 검색어 포함한 데이터 개수 검색 -->
+	study_mozip=0
+		<if test="keyword != null and search != 'study_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword != null and search == 'study_subcon'">
+			and study_subject like '%' || #{keyword} || '%' or
+				study_content like '%' || #{keyword} || '%'
+		</if>
+	</where>
+</select>
+
+<!-- 모집완료 리스트 구하기 -->
+<select id="mozip_list" parameterType="stdb" resultType="stdb"> <!-- alias 별칭 설정 사용 -->
+	select * from (select m1.*, rownum rn1 from (
+	select * from studyBoard
+	<where> <!-- 검색 기능 -->
+	study_mozip=1
+		<if test="keyword !=null and search != 'study_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword !=null and search == 'study_subcon'">
+			and study_subject like '%' || #{keyword} || '%' or
+				study_content like '%' || #{keyword} || '%' 
+		</if>
+	</where>
+		order by study_no desc) m1)
+		where rn1 between #{startRow} and #{endRow}
+</select>
+
+<!-- 모집완료 리스트 구하기 -->
+<!-- 
+<select id="mozip_list" parameterType="stdb" resultType="stdb"> 
+	select * from (select m1.*, rownum rn1 from (
+	select * from studyBoard where study_mozip=1 order by study_no desc) m1)
+	where rn1 between #{startRow} and #{endRow}
+</select>
+ -->
+
+<!-- 모집중 리스트 구하기 -->
+<select id="moziping_list" parameterType="stdb" resultType="stdb">
+	select * from (select m2.*, rownum rn2 from (
+	select * from studyBoard 
+	<where> <!-- 검색 기능 -->
+	study_mozip=0
+		<if test="keyword !=null and search != 'study_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword !=null and search == 'study_subcon'">
+			and study_subject like '%' || #{keyword} || '%' or
+				study_content like '%' || #{keyword} || '%' 
+		</if>
+	</where>
+		order by study_no desc) m2)
+		where rn2 between #{startRow} and #{endRow}
+</select>
+
+<!-- 모집중 리스트 구하기 -->
+<!-- 
+<select id="moziping_list" parameterType="stdb" resultType="stdb">
+	select * from (select m2.*, rownum rn2 from (
+	select * from studyBoard where study_mozip=0 order by study_no desc) m2)
+	where rn2 between #{startRow} and #{endRow}
+</select>
+ -->
+ 
+</mapper>

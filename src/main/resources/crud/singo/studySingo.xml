@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.StudySingoDao">
+
+<!-- 신고테이블에 글이 이미 신고가 되있는지 확인 -->
+<select id="findSameSingo" resultType="int">
+	select count(*) from singo_board where category_no = #{param1} and
+	singo_board_no = #{param2}
+</select>
+
+<!-- singoboard 신고 카운트 +1 -->
+<update id="updateSingoBoardCount">
+	update singo_board set singo_board_count = singo_board_count + 1
+	where category_no = #{param1} and singo_board_no = #{param2} 
+</update>
+
+<!-- 신고 테이블에 insert -->
+<insert id="singoBoardInsert" parameterType="stdb">
+insert into singo_board (singo_no,category_no,singo_board_no,singo_nick,singoboard_date,
+singo_board_count,singo_subject)
+values(singo_board_seq.nextval,#{category_no},#{study_no},#{study_nick},sysdate,
+1,#{study_subject})
+</insert>
+
+<select id="getSingoNo" resultType="int">
+select singo_no from singo_board where category_no = #{param1} and singo_board_no = #{param2}
+</select>
+
+<insert id="reportReasonInsert">
+insert into reportreason_board (report_no, singo_no, category_no,
+report_nick, report_reason, report_content, report_date, report_board_no)
+values(reportreason_seq.nextval,#{param2},#{param1.category_no},
+#{param3.report_nick},#{param3.report_reason},#{param3.report_content},sysdate,#{param1.study_no})
+</insert>
+
+</mapper>

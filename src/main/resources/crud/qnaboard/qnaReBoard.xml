@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myproject.mycode.dao.QnaBoardReplyDao">
+
+	<!-- 글작성 -->
+	<insert id="insert" parameterType="qbr">
+		insert into qnaReBoard values (qnaReBoard_seq.nextval, #{qna_bno},
+		#{qna_re_nick}, #{qna_replytext}, sysdate,0)
+	</insert>
+
+	<!-- 부모 댓글 개수 업데이트 -->
+	<update id="insertRenum" parameterType="int">
+		update qnaBoard set qna_renum = qna_renum + 1 where qna_no = #{qna_no}
+	</update>
+
+	<!-- 부모 댓글 개수 삭제 -->
+	<update id="deleteRenum" parameterType="int">
+		update qnaBoard set qna_renum = qna_renum - 1 where qna_no = #{qna_no}
+	</update>
+
+	<!-- 글목록 -->
+	<select id="list" parameterType="int" resultType="qbr">
+		select * from qnaReBoard where qna_bno = #{qna_no} order by qna_rno
+	</select>
+
+	<!-- 댓글수정 -->
+	<update id="update" parameterType="qbr">
+		update qnaReBoard set qna_replytext=#{qna_replytext},
+		qna_regdate = sysdate where qna_rno=#{qna_rno}
+	</update>
+
+	<!-- 댓글삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from qnaReBoard
+		where qna_rno=#{qna_rno}
+	</delete>
+
+	<!-- 댓글 채택 -->
+	<update id="rsUpdate" parameterType="int">
+		update qnaReBoard set qna_re_sol = 1 where qna_rno = #{qna_rno}
+	</update>
+	
+	<!-- 댓글 채택시 부모 컬럼 1로 업데이트 -->
+ 	<update id="solupdate" parameterType="int">
+ 		update qnaBoard set qna_sol=1 where qna_no in (select qna_bno from qnaReBoard where qna_re_sol=1 and qna_bno = #{qna_bno} )
+ 	</update>
+
+	<!-- 댓글 채택 취소 -->
+	<update id="rsCancel" parameterType="int">
+		update qnaReBoard set
+		qna_re_sol = 0 where qna_rno = #{qna_rno}
+	</update>
+	
+	<!-- 댓글 채택 시 부모 컬럼 0으로 업데이트 -->
+	<update id="solcancel" parameterType="int">
+		update qnaBoard set qna_sol=0 where qna_no in (select qna_bno from
+		qnaReBoard where qna_re_sol=0 and qna_bno = #{qna_bno} )
+	</update>
+
+
+
+</mapper>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myproject.mycode.dao.QnaBoardDao"><!-- dao 폴더 경로 값으로 설정 -->
+
+<!-- 신고 중복 확인 -->
+<select id="getSingoCount" resultType="int">
+select count(*) from reportreason_board where report_board_no=#{param1} and 
+category_no=#{param2} and report_nick = #{param3}
+</select>
+
+<!-- 신고글 신고카운트 +1 -->
+<update id="updateQnaSingo" parameterType="int">
+update qnaBoard set qna_singo = qna_singo + 1 where qna_no = #{qna_no}
+</update>
+
+<!-- 목록 구하기 -->
+<select id="list" parameterType="qnab" resultType="qnab">
+	select * from (select a.*, rowNum rn from (
+	select * from qnaBoard
+	<where>
+		<if test="keyword !=null and search != 'qna_subcon'">
+		 ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword !=null and search =='qna_subcon'">
+		qna_subject like '%'||#{keyword}||'%' or
+		qna_content like '%'||#{keyword}||'%'
+		</if>
+	</where>
+		order by qna_no desc)  a )
+		where rn between #{startRow} and #{endRow}
+</select>
+
+<!-- 해결탭 목록 -->
+<select id="solist" parameterType="qnab" resultType="qnab">
+	select * from (select b.*, rowNum rn2 from (
+	select * from qnaBoard 
+	<where><!-- 검색어 포함한 데이터 개수 검색 -->
+		<if test="qna_sol == 1">
+			qna_sol = 1
+		</if>		
+		<if test="keyword != null and search !='qna_subcon'">
+			${search} like '%' || #{keyword} || '%' and qna_sol = 1
+		</if>
+		<if test="keyword != null and search == 'qna_subcon'">
+			(qna_subject like '%'|| #{keyword} ||'%' or
+			qna_content like '%'|| #{keyword} ||'%')  and qna_sol = 1
+		</if>
+	</where>
+	    order by qna_no desc )  b ) 
+		where rn2 between #{startRow2} and #{endRow2} 
+</select>
+
+<!-- 미해결탭 목록 -->
+<select id="unsolist" parameterType="qnab" resultType="qnab">
+	select * from (select c.*, rowNum rn3 from (
+	select * from qnaBoard 
+	<where><!-- 검색어 포함한 데이터 개수 검색 -->
+			qna_sol = 0
+		<if test="keyword != null and search !='qna_subcon'">
+			and ${search} like '%' || #{keyword} || '%' 
+		</if>
+		<if test="keyword != null and search == 'qna_subcon'">
+			and (qna_subject like '%'|| #{keyword} ||'%' or
+			qna_content like '%'|| #{keyword} ||'%')  
+		</if>
+	</where>
+		 order by qna_no desc )  c )
+		where rn3 between #{startRow3} and #{endRow3}
+</select>
+
+
+
+<!-- 데이터 총 개수 -->
+<select id="getCount" parameterType="qnab" resultType="int">
+	select count(*) from qnaBoard
+	<where><!-- 검색어 포함한 데이터 개수 검색 -->
+		<if test="keyword != null and search !='qna_subcon'">
+			${search} like '%' || #{keyword} || '%' 
+		</if>
+		<if test="keyword != null and search == 'qna_subcon'">
+			qna_subject like '%'||#{keyword}||'%' or
+			qna_content like '%'||#{keyword}||'%'
+		</if>
+	</where>
+</select>
+
+<!-- 해결 총 개수 구하기  -->
+<select id="solnum" parameterType="qnab" resultType="int">
+	select count(*) from qnaBoard 
+	<where><!-- 검색어 포함한 데이터 개수 검색 -->
+			qna_sol = 1
+		<if test="keyword != null and search !='qna_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword != null and search == 'qna_subcon'">
+		   and ( qna_subject like '%'||#{keyword}||'%' or
+			qna_content like '%'||#{keyword}||'%') 
+		</if>
+	</where>		
+</select> 
+
+<!-- 미해결 총 개수 구하기 -->
+<select id="unsolnum" parameterType="qnab" resultType="int">
+	select count(*) from qnaBoard
+	<where><!-- 검색어 포함한 데이터 개수 검색 -->
+			qna_sol = 0
+		<if test="keyword != null and search !='qna_subcon'">
+			and ${search} like '%' || #{keyword} || '%'
+		</if>
+		<if test="keyword != null and search == 'qna_subcon'">
+		   and ( qna_subject like '%' ||#{keyword}||'%' or
+			qna_content like '%'||#{keyword}||'%') 
+		</if>
+	</where>		
+</select>
+
+
+
+
+<!-- 상세정보 구하기-->
+<select id="select" parameterType="int" resultType="qnab">
+	select * from qnaBoard where qna_no = #{qna_no}
+</select>
+
+<!-- 인서트 -->
+<insert id="insert" parameterType="qnab">
+	insert into qnaBoard values (qnaBoard_seq.nextval,#{qna_nick} , 2, #{qna_subject}, #{qna_content},
+	sysdate,0, 0, 0, 0,0)
+</insert> 
+
+
+<!-- 조회수 -->
+<update id="updateRe" parameterType="int">
+	update qnaBoard set qna_readcount = qna_readcount+1 where qna_no = #{qna_no}
+</update>
+
+<!-- 수정 -->
+<update id="update" parameterType="qnab">
+   update qnaBoard set qna_subject = #{qna_subject}, qna_content = #{qna_content} where qna_no = #{qna_no}
+</update>
+
+<!-- 글 삭제 -->
+<delete id="delete" parameterType="int">
+	delete from qnaBoard  where qna_no = #{qna_no}
+</delete>
+
+<!-- 신고당한 글을 삭제한 경우, 신고 테이블에서도 삭제 되도록 -->
+<delete id="singoQnadelete">
+	delete from singo_board where singo_board_no = #{param1} and category_no = #{param2}
+</delete>
+</mapper>

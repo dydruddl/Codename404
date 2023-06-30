@@ -1,0 +1,208 @@
+@charset "UTF-8";
+/* mypage */
+/* 페이지 전체 스타일 */
+body {
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 프로필 스타일 */
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 중앙 정렬을 위해 추가 */
+  margin-bottom: 50px;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 20px;
+}
+
+.username {
+  font-size: 24px;
+  text-align: center; /* 중앙 정렬을 위해 추가 */
+}
+
+/* 내 정보 스타일 */
+.my-info {
+  margin-bottom: 50px;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="email"],
+input[type="url"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* 자기소개 스타일 */
+.self-intro {
+  margin-bottom: 50px;
+}
+
+.radio-buttons {
+  margin-bottom: 20px;
+}
+
+.radio-buttons label {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+textarea {
+  height: 200px;
+}
+
+/* 버튼 스타일 */
+.update {
+  margin-right: 10px;
+}
+
+.delete {
+  background-color: #f44336;
+}
+
+.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* passwd_check */
+
+.passwd-check {
+  max-width: 600px;
+  margin: 100px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.passwd-check {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.passwd-check label {
+  display: block;
+  margin-bottom: 5px;
+  flex-basis: 30%;
+}
+
+.passwd-check input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.passwd-check input[type="submit"] {
+  height: 40px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;W
+}
+
+.passwd-check input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+
+/* mypage_newpasswd */
+
+.newpasswd-container {
+  max-width: 600px;
+  margin: 100px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.newpasswd-form-group {
+  margin-bottom: 20px;
+}
+
+.newpasswd-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.newpasswd-form-group input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.newpasswd-form-group input[type="passwd"] {
+  height: 40px;
+}
+
+.newpasswd-form-group button[type="submit"] {
+  height: 40px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.newpasswd-form-group button[type="submit"]:hover {
+  background-color: #45a049;
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myproject.mycode.dao.SingoBoardDao">
+
+
+<!-- 해당유저 신고글 리스트 -->
+<select id="getSingoList" parameterType="singo" resultType="singo">
+   select * from (select rownum rnum,a.* from
+      (select * from singo_board
+   <where>
+         <!-- 카테고리별로 검색하는 경우 -->
+         <if test="category_no == 0">
+            category_no = 1 or category_no = 2 or category_no = 3
+         </if>
+         <if test="category_no == 1">
+            category_no = 1
+         </if>
+         <if test="category_no == 2">
+                category_no = 2
+          </if>
+           <if test="category_no == 3">
+                category_no = 3
+           </if>
+   </where>
+         order by singoboard_date desc) a)
+         where (rnum between #{startRow} and #{endRow}) and singo_nick = #{singo_nick}
+   </select>
+
+   <select id="getSingoCount" parameterType="singo" resultType="int">
+   select count(*) from singo_board <!-- 전체 데이터개수-->
+      
+      
+      <where>
+         <!-- 카테고리별로 검색하는 경우 -->
+         <if test="category_no == 0">
+            (category_no = 1 or category_no = 2 or category_no = 3) and singo_nick = #{singo_nick}
+         </if>
+         <if test="category_no == 1">
+            category_no = 1 and singo_nick = #{singo_nick}
+         </if>
+         <if test="category_no == 2">
+                category_no = 2 and singo_nick = #{singo_nick}
+          </if>
+           <if test="category_no == 3">
+                category_no = 3 and singo_nick = #{singo_nick}
+           </if>
+      </where> 
+   </select>
+   
+   <!-- 신고글 전체리스트 -->
+<select id="getSingoListAll" parameterType="singo" resultType="singo">
+   select * from (select rownum rnum,a.* from
+      (select * from singo_board
+   <where>
+         <!-- 카테고리별로 검색하는 경우 -->
+         <if test="category_no == 0">
+            category_no = 1 or category_no = 2 or category_no = 3
+         </if>
+         <if test="category_no == 1">
+            category_no = 1
+         </if>
+         <if test="category_no == 2">
+                category_no = 2
+          </if>
+           <if test="category_no == 3">
+                category_no = 3
+           </if>
+   </where>
+         order by singoboard_date desc) a)
+         where rnum between #{startRow} and #{endRow}
+   </select>
+
+   <select id="getSingoCountAll" parameterType="singo" resultType="int">
+   select count(*) from singo_board <!-- 전체 데이터개수-->
+      <where>
+         <!-- 카테고리별로 검색하는 경우 -->
+         <if test="category_no == 0">
+            (category_no = 1 or category_no = 2 or category_no = 3)
+         </if>
+         <if test="category_no == 1">
+            category_no = 1 and state=1
+         </if>
+         <if test="category_no == 2">
+                category_no = 2 and state=1
+          </if>
+           <if test="category_no == 3">
+                category_no = 3 and state=1
+           </if>
+      </where> 
+   </select>
+
+   <select id="getSingo" resultType="singo">
+   select * from singo_board where singo_no=#{singo_no}
+   </select>
+
+
+<!-- 신고사유 리스트 -->
+<select id="getReportList" parameterType="report"  resultType="report">
+     select * from (select rownum rnum, b.* from
+        (select * from reportreason_board order by report_date desc) b)
+      where (rnum between #{startRow} and #{endRow}) and singo_no = #{singo_no}
+   </select>
+   
+<!-- 사유리스트 개수구하기 -->
+<select id="getReportBoardCount" parameterType="report" resultType="int">
+      select count(*) from reportreason_board where singo_no = #{singo_no}   
+   </select>
+
+   <!-- 사유 상세페이지 -->
+   <select id="reportView" resultType="report" parameterType="int">
+      select * from reportreason_board where singo_no=#{singo_no}
+   </select>
+</mapper>

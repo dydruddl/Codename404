@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.NoticeBoardDao">
+
+	<!-- 게시판 목록 (page번호를 전달받아서 startRow와 endRow를 구함) -->
+	<select id="noticeList" parameterType="notice"  resultType="notice">
+	  select * from (select rownum rnum, b.* from
+	  	(select * from notice_board
+	  	<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+	</where>
+		order by notice_date desc) b)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+
+	<!-- create -->
+	<insert id="noticeInsert" parameterType="notice">
+		insert into notice_board
+		(notice_no,admin_nick,notice_subject,
+		notice_content,notice_date,notice_readcount)
+		values
+		
+		(notice_board_num_seq.nextval,'관리자',#{notice_subject},
+		#{notice_content},SYSDATE,0)
+	</insert>
+
+	
+	<!-- 총게시물 수 -->
+	<select id="getNoticeBoardCount" parameterType="notice" resultType="int">
+		select count(*) from notice_board
+		<!-- 검색어를 포함한 데이터 개수 -->
+		<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+			<!-- 제목 + 내용으로 검색하는 경우 -->
+			<!-- <if test="keyword != null and search=='subcon'">
+				subject like '%'||#{keyword}||'%' or
+				content like '%'||#{keyword}||'%'
+			</if> -->
+		</where>
+	</select>
+
+	<!-- read -->
+	<select id="noticeView" resultType="notice" parameterType="int">
+		select * from notice_board where notice_no=#{notice_no}
+	</select>
+
+	<!-- readcount 증가 -->
+	<update id="updateRe" parameterType="notice">
+		update notice_board set notice_readcount=notice_readcount+1
+		where notice_no=#{notice_no}
+	</update>
+
+	<!-- update -->
+	<update id="noticeUpdate" parameterType="notice" >
+		update notice_board set
+		notice_subject=#{notice_subject},
+		notice_content=#{notice_content}
+		where notice_no=#{notice_no}
+	</update>
+
+	<!-- delete -->
+	<delete id="noticeDelete" parameterType="notice">
+		delete from notice_board where notice_no=#{notice_no}
+	</delete>
+
+	
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

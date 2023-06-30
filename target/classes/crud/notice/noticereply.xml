@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.NoticeReplyDao">
+
+<select id="getReplyList" parameterType="int" resultType="noticereply">
+	select * from notice_reply where notice_no=#{notice_no} 
+	order by notice_regdate desc
+</select>
+
+<insert id="noticeRepInsert" parameterType="noticereply">
+		insert into notice_reply values (notice_replynum_seq.nextval,#{notice_no},#{notice_renick},
+			#{notice_replycontent},sysdate)
+</insert>
+
+<update id="noticeRepUpdate" parameterType="noticereply">
+		update notice_reply set notice_replycontent=#{notice_replycontent},
+		notice_regdate=sysdate where notice_rno=#{notice_rno} 
+</update>
+	
+<delete id="noticeRepDelete" parameterType="int">
+      delete from notice_reply where notice_rno=#{notice_rno}
+</delete>
+
+</mapper>

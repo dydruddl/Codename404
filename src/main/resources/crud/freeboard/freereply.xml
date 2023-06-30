@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myproject.mycode.dao.FreeBoardReplyDao">
+
+	<!-- 글작성 -->
+	<insert id="insert" parameterType="fbr">
+		insert into free_reply values (free_reply_seq.nextval, #{free_no},
+		#{free_re_nick}, #{free_replytext}, sysdate)
+	</insert>
+
+	<!-- 글목록 -->
+	<select id="list" parameterType="int" resultType="fbr">
+		select * from free_reply where free_no = #{free_no} order by free_rno
+	</select>
+
+
+	<!-- 추가한 부분 -->
+	<!-- 댓글수정 -->
+	<update id="update" parameterType="fbr">
+		update free_reply set free_replytext=#{free_replytext},
+		free_regdate = sysdate where free_rno=#{free_rno}
+	</update>
+
+	<!-- 댓글삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from free_reply
+		where free_rno=#{free_rno}
+	</delete>
+
+
+</mapper>

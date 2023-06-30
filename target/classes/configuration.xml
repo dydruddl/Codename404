@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases> <!-- 별칭설정 --> <!-- DTO를 멤버로 별칭 -->
+		<!-- 회원가입, 로그인, 마이페이지 -->
+		<typeAlias alias="member" type="com.myproject.mycode.model.MemberModel" />
+		
+		<!-- 관리자 -->
+		<typeAlias alias ="admin" type="com.myproject.mycode.model.AdminModel"/>
+		
+		<!-- notice -->
+		<typeAlias alias="notice" type="com.myproject.mycode.model.NoticeBoardModel" />
+		<typeAlias alias="noticereply" type="com.myproject.mycode.model.NoticeReplyModel" />
+		
+		<!-- Study -->
+		<typeAlias alias="stdb" type="com.myproject.mycode.model.StudyBoard"></typeAlias>
+		<typeAlias alias="sbr" type="com.myproject.mycode.model.StudyBoardReply"></typeAlias>
+		
+		<!-- QnA -->
+		<typeAlias alias ="qnab" type="com.myproject.mycode.model.QnaBoard"></typeAlias>
+		<typeAlias alias ="qbr" type="com.myproject.mycode.model.QnaBoardReply"></typeAlias>
+		 
+		<!-- 신고 --> 	
+		<typeAlias alias ="singo" type="com.myproject.mycode.model.SingoModel"></typeAlias>
+		<typeAlias alias="report" type="com.myproject.mycode.model.ReportReasonModel" />
+	 	
+	 	<!-- Free -->
+	 	<typeAlias type="com.myproject.mycode.model.freeboard" alias="free" />
+		<typeAlias type="com.myproject.mycode.model.freeboardreply" alias="fbr" />
+	 	
+	</typeAliases>	
+		
+
+</configuration>	

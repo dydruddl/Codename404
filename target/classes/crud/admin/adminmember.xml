@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.AdminDAO">
+
+<select id="adminCheck" parameterType="String" resultType="admin">
+select * from adminmember where admin_id = #{admin_id}
+</select>
+
+	<select id="getMemberList" parameterType="member" resultType="member">
+	select * from (select rownum rnum,a.* from
+		(select * from member
+	<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+	</where>
+			order by register desc) a)
+			where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="getMemberNormalList" parameterType="member" resultType="member">
+	select * from (select rownum rnum,a.* from
+		(select * from member
+	<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				 <if test="state == 1">
+				and ${search} like '%'||#{keyword}||'%'
+				</if>
+			</if>
+			and state=1
+	</where>
+			order by register desc) a)
+			where (rnum between #{startRow} and #{endRow}) and state=1
+	</select>
+	
+	<select id="getMemberBanList" parameterType="member" resultType="member">
+	select * from (select rownum rnum,a.* from
+		(select * from member
+	<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				<if test="state == 2">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+			</if>
+			and state=2
+	</where>
+			order by register desc) a)
+			where (rnum between #{startRow} and #{endRow}) and state=2
+	</select>
+	
+	<select id="getMemberCount" parameterType="member" resultType="int">
+	select count(*) from member <!-- 전체 데이터개수-->
+		
+		<!-- 검색어를 포함한 데이터 개수 -->
+		<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="getMemberNormalCount" parameterType="member" resultType="int">
+	select count(*) from member <!-- 전체 데이터개수-->
+		
+		<!-- 검색어를 포함한 데이터 개수 -->
+		<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+			<if test="state == 1">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+			</if>
+			and state=1
+		</where>
+	</select>
+	
+	<select id="getMemberbanCount" parameterType="member" resultType="int">
+	select count(*) from member <!-- 전체 데이터개수-->
+		
+		<!-- 검색어를 포함한 데이터 개수 -->
+		<where>
+			<!-- 작성자, 제목, 내용으로 검색하는 경우 -->
+			<if test="keyword != null">
+			<if test="state == 2">
+				${search} like '%'||#{keyword}||'%'
+			</if>
+			</if>
+			and state=2
+		</where>
+	</select>
+
+	<select id="getMember" resultType="member">
+	select * from member where id=#{id}
+	</select>
+	
+	<delete id="userDelete">
+	delete from member where id=#{id}
+	</delete>
+	
+	<delete id="deleteUserSingo" parameterType="String">
+	delete from singo_board where singo_nick=#{nick}
+	</delete>
+	
+</mapper>

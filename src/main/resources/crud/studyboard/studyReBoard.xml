@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.mycode.dao.StudyBoardReplyDao">
+
+	<!-- 글작성 -->
+	<insert id="repStudyInsert" parameterType="sbr">
+		insert into studyReBoard values (studyReBoard_seq.nextval, #{study_no},
+		#{study_re_nick}, #{study_replytext}, sysdate)
+	</insert>
+
+	<!-- 글목록 -->
+	<select id="studyList" parameterType="int" resultType="sbr">
+		select * from studyReBoard where study_no = #{study_no} order by study_rno
+	</select>
+
+
+	<!-- 추가한 부분 -->
+	<!-- 댓글수정 -->
+	<update id="studyUpdate" parameterType="sbr">
+		update studyReBoard set study_replytext=#{study_replytext},
+		study_regdate = sysdate where study_rno=#{study_rno}
+	</update>
+
+	<!-- 댓글삭제 -->
+	<delete id="studyDelete" parameterType="int">
+		delete from studyReBoard
+		where study_rno=#{study_rno}
+	</delete>
+
+
+</mapper>

@@ -1,0 +1,143 @@
+@charset "UTF-8";
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* 전체 프레임 */
+#frame { 
+    background-color: #FFF;
+    max-width: 1920px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* 헤더 밑 이름 */
+.headline {
+    font-size: 3em;
+    font-weight: 400;
+    text-align: center;
+    padding: 2em;
+}
+
+/* 푸터 */
+#footer {
+    color: aliceblue;
+    text-align: center;
+    background-color: #3B4443;
+    overflow: hidden;
+}
+
+/* Desktop */
+@media screen and (min-width:481px) {
+    /* 헤더 */
+    #header {
+        margin-top: -20px;
+        width: 100%;
+        height: 500px;
+        background: url('images/head.jpg') no-repeat;
+        background-position: center center;
+        background-size: cover;
+    }
+    
+    /* content 내용 */
+    #content {
+        max-width: 1280px;
+        min-width: 1080px;
+        margin: 0 auto;
+        margin-bottom: 200px;
+    }
+    
+    /* 1. 소개 */
+    #introduce {
+        margin: 0 0 7em 0;
+        overflow: hidden;
+    }
+    
+    /* 먼저 왼쪽으로 날림 */
+    #intro-image {
+        width: 250px;
+        height: 250px;
+        float: left;
+        margin: 0 4em;
+    }
+    
+    /* 오른쪽으로 날림 */
+    #intro-text {
+        width: 40%;
+        float: right;
+        margin: 0 5em 0 0;
+    }
+    
+    /* 왼쪽으로 또 날림 */
+    #spec {
+        width: 200px;
+        float: left;
+        margin: 0 0 0 3em;
+    }
+    
+    /* 왼쪽/가운데/오른쪽 */
+    #article {
+        overflow: hidden;
+    }
+    
+    /* 왼쪽 */
+    #left {
+        float: left;
+        margin: 0 4.1666%;
+        width: 25%;
+    }
+    
+    /* 오른쪽 */
+    #right {
+        float: right;
+        margin: 0 4.1666%;
+        width: 25%;
+        text-align: center;
+    }
+    
+    /* 가운데 */
+    #middle {
+        float: left;
+        margin: 0 4.1666%;
+        width: 25%;
+    }
+    
+    /* 아이콘 이미지 */
+    .icon {
+        display: block;
+        width: 30px;
+        height: 28px;
+        margin: 50px auto;
+    }
+    
+    #article h2 {
+        letter-spacing: 20px;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    #article p {
+        text-align: left !important;
+    }
+    
+    #footer {
+        height: 280px;
+    }
+    
+    /* 푸터 이미지 */
+    #social {
+        margin: 70px auto;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width:480px) {
+}
+
